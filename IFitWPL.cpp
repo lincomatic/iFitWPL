@@ -28,10 +28,14 @@
 #include <cstring>
 
 #define WPL_RECTYPE_TITLE 0x0603
+#define WPL_RECTYPE_DESC  0x0607
 #define WPL_RECTYPE_BASENAME 0x0602
 #define WPL_RECTYPE_PCIF 0x2c01
-#define WPL_RECTYPE_BCIF 0x2c04
 #define WPL_RECTYPE_FCIF 0x2c02
+#define WPL_RECTYPE_MCIF 0x2c03
+#define WPL_RECTYPE_BCIF 0x2c04
+#define WPL_RECTYPE_WAV1 0x0e56
+#define WPL_RECTYPE_WAV2 0x0e58
 #define WPL_RECTYPE_WORKOUT_START 0x0d02
 //maximum inclination in percent multiplied by 10 (3.5% is coded 35)
 #define WPL_RECTYPE_MAX_INCLINATION 0x0437
@@ -128,6 +132,12 @@ void WplRecord::Dump(FILE *ofp)
     fprintf(ofp,"\n");
     break;
 	
+  case WPL_RECTYPE_DESC:
+    fprintf(ofp,"Description: ");
+    for (i=0;i < contentLen-1;i++) fprintf(ofp,"%c",data[i]);
+    fprintf(ofp,"\n");
+    break;
+	
   case WPL_RECTYPE_BASENAME:
     fprintf(ofp,"Base name: ");
     for (i=0;i < contentLen-1;i++) fprintf(ofp,"%c",data[i]);
@@ -148,6 +158,24 @@ void WplRecord::Dump(FILE *ofp)
 	
   case WPL_RECTYPE_FCIF:
     fprintf(ofp,"FCIF: ");
+    for (i=0;i < contentLen-1;i++) fprintf(ofp,"%c",data[i]);
+    fprintf(ofp,"\n");
+    break;
+	
+  case WPL_RECTYPE_MCIF:
+    fprintf(ofp,"MCIF: ");
+    for (i=0;i < contentLen-1;i++) fprintf(ofp,"%c",data[i]);
+    fprintf(ofp,"\n");
+    break;
+	
+  case WPL_RECTYPE_WAV1:
+    fprintf(ofp,"WAV1: ");
+    for (i=0;i < contentLen-1;i++) fprintf(ofp,"%c",data[i]);
+    fprintf(ofp,"\n");
+    break;
+	
+  case WPL_RECTYPE_WAV2:
+    fprintf(ofp,"WAV2: ");
     for (i=0;i < contentLen-1;i++) fprintf(ofp,"%c",data[i]);
     fprintf(ofp,"\n");
     break;
@@ -243,8 +271,7 @@ void WplRecord::Dump(FILE *ofp)
 
 int main(int argc, char *argv[])
 {
-//  char *ifn = "CLTXGK6V.wpl";
-  char *ifn = "C:\\tmp\\ifit\\400 meter hill repeats\\32mti2vq.wpl";
+  const char *ifn = argv[1];
   FILE *ifp = fopen(ifn,"rb");
   char ofn[256];
   strcpy(ofn,ifn);
